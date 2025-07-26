@@ -1,109 +1,47 @@
-# Tema 3 - Client web. Comunicatie cu REST API
-_Ivașcu Andreea-Daria_
-_322CC_
+# RESTful Library Client
 
-## Cerinta generala a temei
-    Pornind de la informatiile si functiile date in laboratorul 9, am 
-implementat un client HTTP care poate comunica cu un REST API, realizand
-request-uri de tipul POST, GET, DELETE si PUT. In request-uri, am adaugat
-informatiile necesare pentru a comunica cu serverul pentru a cere anumite
-informatii despre o biblioteca de filme. Din raspunsurile primite de la server,
-sunt extrase doar datele necesare comenzii introduse de client in terminal,
-urmand ca mai apoi acestea sa fie afisate.
+## General Description
+I implemented an HTTP client that can communicate with a REST API by making POST, GET, DELETE, and PUT requests. Each request includes the necessary data to interact with the server in order to request the specific information related to a movie library. Only the relevant information from the server's JSON responses are extracted, based on the command entered in the terminal by the client, and also displayed in terminal.
 
-    -> Pentru a parsa mai clar datele despre un user sau un film, am creat 2
-structuri pe care le-am folosit in crearea cererilor pentru server.
+To make the data related to users and movies easier to parse, I created two structures that are used when building requests to the server.
 
-## Biblioteca parson
-    Am folosit biblioteca parson, deoarece ofera o interfata destul de simpla 
-si eficienta pentru partea de serializare a si deserializare a datelor din JSON.
-    Am folosit-o pentru crearea, stergerea, actualizarea filmelor/colectiilor
-de filme, dar si pentru extragerea informatiilor din raspunsurile de tip JSON
-de la server pentru a le afisa utilizatorului.
+## Parson library
+I used the Parson library because it provides a simple and efficient interface for serializing and deserializing JSON data.
+It is used for creating, deleting, and updating movies/collections, as well as for extracting information from JSON responses received from the server to display to the user.
 
-## Cookie-urile de sesiune si verificarea conectivitatii
-    In cadrul aplicatiei, am folosit 2 cookie-uri de sesiune: unul pentru
-admin si unul pentru user. Astfel, atat adminul cat si userul raman conectati
-pana la delogare (sau pana la expirarea conexiunii) si sunt autorizati sa
-faca actiunile destinate rolurilor lor.
+## Session Cookies and Conectivity Checks
+The application uses two session cookies: one for the admin and one for the user. This ensures that both the admin and the user remain logged in until they choose to log out (or until the session expires) and are authorized to perform actions specific to their roles.
 
-    Odata ce un client se logheaza (fie admin, fie user), ca raspuns al cererii
-de conectare cu succes, serverul va trimite un cookie de sesiune, care va fi
-trimis dupa automat la fiecare cerere HTTP care va urma. Astfel, cookie-ul de
-sesiune este folosit pentru a valida sesiunea clientului, serverul stiind cine
-efectueaza cererile si care sunt permisiunile acestuia.    
+Once a client logs in (either as an admin or a user), the server responds with a session cookie, which is automatically included in every subsequent HTTP request. This cookie is used to validate the client session and determine the client's identity and permissions.
 
-    Pentru a verifica conectivitatea atat a adminului, cat si a clientului, am
-realizat o variabila de verificare (o variabila pentru admin si una pentru user)
-care va fi marcata cu 1 atunci cand conexiunea este activa si cu 0 altfel. Apoi,
-am folosit aceasta variabila pe tot parcursul codului, pentru a verifica
-permisiunile clientului pentru anumite actiuni.
+To track the connectivity status of both admin and user roles, I implemented two variables (one for each role). These variables are set to 1 when the connection is active and 0 otherwise. They are used throughout the code to check if the user has the required permissions to perform certain actions.
 
 ## JWT Token
-    Pentru operatiile cu biblioteca de filme si colectii, pentru a verifica
-autentificarea si autorizarea utilizatorilor, am folosit JWT token. Astfel,
-prin acesta doar utilizatorii autentificati si cu permisiunile necesare pot
-accesa sau modifica informatiile din biblioteca.
+For operations related to the movie library and collections, I used a JWT token to verify user authentication and authorization. This ensures that only authenticated users with appropriate permissions can access or modify the library's data.
 
-## Functionalitatile aplicatiei
-    Pentru rolul de admin, acesta poate sa faca urmatoarele actiuni:
-    - login_admin - se extrag credentialele acestuia si se trimite o cerere
-        POST catre server, care intoarce spre admin un cookie de login
-    - logout_admin - daca utilizatorul este conectat ca admin, se va trimite
-        o cerere GET catre server
-    - add_users - daca utilizatorul este conectat ca admin, se va trimite o 
-        cerere POST catre server cu informatiile introduse de admin (noul
-        username si parola pentru cont)
-    - get_users - daca utilizatorul este conectat ca admin, se va trimite o
-        cerere GET catre server care va intoarce ca raspuns JSON toti
-        utilizatorii creati pe server sub adminul curent
-    - delete_user - daca utilizatorul este conectat ca admin, acesta va trimite
-        o cerere DELETE catre server cu username-ul userului care va fi sters
-        de pe server
-    
-    Pentru rolul de user, acesta poate sa faca urmatoarele actiuni:
-    - login - se extrag credentialele userului si se trimite o cerere POST catre
-        server, care intoarce spre user un cookie de login
-    - logout - daca utilizatorul este conectat, se va trimite o cerere
-        GET catre server
-    - get_access - daca utilizatorul este conectat, se va trimite o 
-        cerere GET catre server, iar daca cererea a fost primita cu succes, se
-        va returna un JWT token care confirma accesul utilizatorului la biblioteca
-    - add_movie - daca utilizatorul este conectat, se va trimite o
-        cerere POST catre server cu informatiile necesare filmului (title, year,
-        description, rating)
-    - get_movie - daca utilizatorul este conectat si are acces la biblioteca, 
-        se solicita un id de film si se trimite o cerere GET catre server pentru 
-        a extrage detalii despre filmul respectiv
-    - get_movies - daca utilizatorul este conectat si are acces la biblioteca,
-        se trimite o cerere GET catre server pentru a obtine lista filmelor
-        disponibile
-    - delete_movie - daca utilizatorul este conectat si are acces la biblioteca,
-        se solicita id-ul unui film si se trimite o cerere DELETE catre server
-        pentru a sterge filmul respectiv
-    - update_movie - daca utilizatorul este conectat si are acces la biblioteca,
-        se solicita id-ul si noile detalii ale filmului, apoi se trimite o cerere
-        PUT catre server pentru a actualiza informatiile filmului
-    - add_collection - daca utilizatorul este conectat si are acces la biblioteca,
-        se solicita titlul colectiei si lista de filme, apoi se trimite o cerere
-        POST catre server pentru a crea o noua colectie de filme
-    - add_movie_to_collection - daca utilizatorul este conectat, are acces la
-        biblioteca si este owner al colectiei, se solicita id-ul colectiei si
-        id-ul filmului, apoi se trimite o cerere POST catre server pentru a adauga
-        filmul in colectia respectiva
-    - get_collections - daca utilizatorul este conectat si are acces la biblioteca,
-        se trimite o cerere GET catre server pentru a obtine lista colectiilor
-        disponibile
-    - get_collection - daca utilizatorul este conectat si are acces la biblioteca,
-        se solicita id-ul unei colectii si se trimite o cerere GET catre server
-        pentru a obtine detalii despre colectia respectiva
-    - delete_collection - daca utilizatorul este conectat, are acces la biblioteca
-        si este owner al colectiei, se solicita id-ul colectiei si se trimite o
-        cerere DELETE catre server pentru a sterge colectia respectiva
-    - delete_movie_from_collection - daca utilizatorul este conectat, are acces
-        la biblioteca si este owner al colectiei, se solicita id-ul colectiei si
-        id-ul filmului, apoi se trimite o cerere DELETE catre server pentru a
-        sterge filmul din colectie
+## Application Features
 
+### Admin Role
+An admin can perform the following actions:
+**login_admin** – Extracts the admin's credentials and sends a POST request to the server. On success, the server returns a session cookie.
+**logout_admin** – Sends a GET request to the server to log out, if currently logged in as admin.
+**add_users** – Sends a POST request to create a new user, using the username and password provided by the admin.
+**get_users** – Sends a GET request to retrieve a list of all users created under the current admin.
+**delete_user** – Sends a DELETE request to remove a specific user, using their username.
 
-
+### User Role
+A user can perform the following actions:
+**login** – Extracts the user's credentials and sends a POST request. On success, the server returns a session cookie.
+**logout** – Sends a GET request to log out, if currently logged in.
+**get_access** – Sends a GET request to obtain a JWT token granting access to the movie library.
+**add_movie** – Sends a POST request to add a new movie, with fields such as title, year, description and rating.
+**get_movie** – Sends a GET request for a specific movie ID, returning its details (if the user is connected and has access).
+**get_movies** – Sends a GET request to retrieve a list of all available movies.
+**delete_movie** – Sends a DELETE request to remove a movie, based on its requested ID.
+**update_movie** – Sends a PUT request with updated information for a specific movie, identified by its ID provided by the user.
+**add_collection** – Sends a POST request to create a new movie collection, with a given title and a list of movie IDs.
+**add_movie_to_collection** – Sends a POST request to add a movie to a collection (if the user is the owner).
+**get_collections** – Sends a GET request to retrieve all collections.
+**get_collection** – Sends a GET request for a specific collection ID to retrieve its details.
+*8delete_collection** – Sends a DELETE request to remove a collection (if the user is the owner).
+**delete_movie_from_collection** – Sends a DELETE request to remove a movie from a collection (if the user is the owner).
