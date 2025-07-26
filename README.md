@@ -23,25 +23,25 @@ For operations related to the movie library and collections, I used a JWT token 
 
 ### Admin Role
 An admin can perform the following actions:
-**login_admin** – Extracts the admin's credentials and sends a POST request to the server. On success, the server returns a session cookie.
-**logout_admin** – Sends a GET request to the server to log out, if currently logged in as admin.
-**add_users** – Sends a POST request to create a new user, using the username and password provided by the admin.
-**get_users** – Sends a GET request to retrieve a list of all users created under the current admin.
-**delete_user** – Sends a DELETE request to remove a specific user, using their username.
+- **login_admin** – Extracts the admin's credentials and sends a POST request to the server. On success, the server returns a session cookie.
+- **logout_admin** – Sends a GET request to the server to log out, if currently logged in as admin.
+- **add_users** – Sends a POST request to create a new user, using the username and password provided by the admin.
+- **get_users** – Sends a GET request to retrieve a list of all users created under the current admin.
+- **delete_user** – Sends a DELETE request to remove a specific user, using their username.
 
 ### User Role
 A user can perform the following actions:
-**login** – Extracts the user's credentials and sends a POST request. On success, the server returns a session cookie.
-**logout** – Sends a GET request to log out, if currently logged in.
-**get_access** – Sends a GET request to obtain a JWT token granting access to the movie library.
-**add_movie** – Sends a POST request to add a new movie, with fields such as title, year, description and rating.
-**get_movie** – Sends a GET request for a specific movie ID, returning its details (if the user is connected and has access).
-**get_movies** – Sends a GET request to retrieve a list of all available movies.
-**delete_movie** – Sends a DELETE request to remove a movie, based on its requested ID.
-**update_movie** – Sends a PUT request with updated information for a specific movie, identified by its ID provided by the user.
-**add_collection** – Sends a POST request to create a new movie collection, with a given title and a list of movie IDs.
-**add_movie_to_collection** – Sends a POST request to add a movie to a collection (if the user is the owner).
-**get_collections** – Sends a GET request to retrieve all collections.
-**get_collection** – Sends a GET request for a specific collection ID to retrieve its details.
-*8delete_collection** – Sends a DELETE request to remove a collection (if the user is the owner).
-**delete_movie_from_collection** – Sends a DELETE request to remove a movie from a collection (if the user is the owner).
+- **login** – Extracts the user's credentials and sends a POST request. On success, the server returns a session cookie.
+- **logout** – Sends a GET request to log out, if currently logged in.
+- **get_access** – Sends a GET request to obtain a JWT token granting access to the movie library.
+- **add_movie** – Sends a POST request to add a new movie, with fields such as title, year, description and rating.
+- **get_movie** – Sends a GET request for a specific movie ID, returning its details (if the user is connected and has access).
+- **get_movies** – Sends a GET request to retrieve a list of all available movies.
+- **delete_movie** – Sends a DELETE request to remove a movie, based on its requested ID.
+- **update_movie** – Sends a PUT request with updated information for a specific movie, identified by its ID provided by the user.
+- **add_collection** – Sends a POST request to create a new movie collection, with a given title and a list of movie IDs.
+- **add_movie_to_collection** – Sends a POST request to add a movie to a collection (if the user is the owner).
+- **get_collections** – Sends a GET request to retrieve all collections.
+- **get_collection** – Sends a GET request for a specific collection ID to retrieve its details.
+- **delete_collection** – Sends a DELETE request to remove a collection (if the user is the owner).
+- **delete_movie_from_collection** – Sends a DELETE request to remove a movie from a collection (if the user is the owner).
